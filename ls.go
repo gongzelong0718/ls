@@ -35,13 +35,10 @@ func ls(output_buffer *bytes.Buffer, args []string) {
 			if isDotName(file) {
 				continue
 			}
-			//fmt.Printf("%s\t", file.Name())
 			output_buffer.WriteString(file.Name())
 			output_buffer.WriteString("\t")
 		}
 	}
-
-	//fmt.Printf("\n")
 }
 
 //
