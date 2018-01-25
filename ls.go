@@ -6,6 +6,11 @@ import (
 	"os"
 )
 
+func isDotName(file os.FileInfo) bool {
+	fileNameRune := []rune(file.Name())
+	return fileNameRune[0] == rune('.')
+}
+
 func main() {
 	var dirs []string
 
@@ -26,6 +31,9 @@ func main() {
 		}
 
 		for _, file := range files {
+			if isDotName(file) {
+				continue
+			}
 			fmt.Printf("%s\t", file.Name())
 		}
 	}
