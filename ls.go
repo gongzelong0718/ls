@@ -29,4 +29,6 @@ func main() {
 			fmt.Printf("%s\t", file.Name())
 		}
 	}
+
+	fmt.Printf("\n")
 }
