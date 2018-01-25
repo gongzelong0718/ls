@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"os"
+	"bytes"
 )
 
 func isDotName(file os.FileInfo) bool {
@@ -11,7 +12,7 @@ func isDotName(file os.FileInfo) bool {
 	return fileNameRune[0] == rune('.')
 }
 
-func main() {
+func ls(output_buffer *bytes.Buffer, args []string) {
 	var dirs []string
 
 	if len(os.Args) == 1 {
@@ -20,7 +21,7 @@ func main() {
 		dirs = append(dirs, dir)
 	} else {
 		// the case executed with args (= dirs to list)
-		dirs = os.Args[1:]
+		dirs = args
 	}
 
 	for _, dir := range dirs {
@@ -34,9 +35,22 @@ func main() {
 			if isDotName(file) {
 				continue
 			}
-			fmt.Printf("%s\t", file.Name())
+			//fmt.Printf("%s\t", file.Name())
+			output_buffer.WriteString(file.Name())
+			output_buffer.WriteString("\t")
 		}
 	}
 
 	fmt.Printf("\n")
+}
+
+//
+// main
+//
+func main() {
+	var output_buffer bytes.Buffer
+
+	ls(&output_buffer, os.Args[1:])
+
+	fmt.Printf("%s\n", output_buffer.String())
 }
