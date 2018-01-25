@@ -41,7 +41,7 @@ func ls(output_buffer *bytes.Buffer, args []string) {
 		}
 	}
 
-	fmt.Printf("\n")
+	//fmt.Printf("\n")
 }
 
 //
