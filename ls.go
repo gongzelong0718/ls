@@ -5,6 +5,8 @@ import (
 	"io/ioutil"
 	"os"
 	"bytes"
+	"strings"
+	"regexp"
 )
 
 func isDotName(file os.FileInfo) bool {
@@ -15,15 +17,41 @@ func isDotName(file os.FileInfo) bool {
 func ls(output_buffer *bytes.Buffer, args []string) {
 	var dirs []string
 
-	if len(os.Args) == 1 {
+	//fmt.Printf("%s\n", args)
+	//fmt.Printf("%d\n", len(args))
+	if len(args) == 0 || len(args) == 1{
 		// the case executed with no args
 		dir, _ := os.Getwd()
 		dirs = append(dirs, dir)
-	} else {
-		// the case executed with args (= dirs to list)
-		dirs = args
 	}
 
+	args_options := make([]string, 0)
+
+	for _, a := range args {
+		option, err := regexp.MatchString("^-", a)
+
+		if err != nil {
+			fmt.Printf("error: %v\n", err)
+			os.Exit(1)
+		} else if option {
+			// add to the options list
+			args_options = append(args_options, a)
+			//fmt.Printf("%s\n", args_options)
+		} else {
+			// add to the files/directories list
+			dirs = append(dirs, a)
+		}
+	}
+
+	option_all := false
+	for _, o := range args_options {
+		if strings.Contains(o, "a") {
+			option_all = true
+		}
+	}
+
+	//fmt.Printf("%s\n", option_all)
+	//fmt.Printf("%s\n", dirs)
 	for _, dir := range dirs {
 		files, err := ioutil.ReadDir(dir)
 
@@ -32,7 +60,8 @@ func ls(output_buffer *bytes.Buffer, args []string) {
 		}
 
 		for _, file := range files {
-			if isDotName(file) {
+			//fmt.Printf("%s\n", file.Name())
+			if isDotName(file) && !option_all {
 				continue
 			}
 			output_buffer.WriteString(file.Name())

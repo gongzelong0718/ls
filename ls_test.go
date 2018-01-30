@@ -88,9 +88,9 @@ func TestNoArgsFiles(t *testing.T) {
 
 	_mkdir(dir)
 	_cd(dir)
-	_mkfile("a")
-	_mkfile("b")
-	_mkfile("c")
+	_mkdir("a")
+	_mkdir("b")
+	_mkdir("c")
 
 	var output_buffer bytes.Buffer
 	var args []string
@@ -130,3 +130,74 @@ func TestNoArgsDotFiles(t *testing.T) {
 		t.Fail()
 	}
 }
+
+func TestMultipleDirs(t *testing.T) {
+	_cd(test_root)
+
+	dir := "MultipleDirs"
+
+	_mkdir(dir)
+	_cd(dir)
+
+	_mkdir("a")
+	_cd("a")
+	_mkfile("A")
+	_mkfile("B")
+	_cd("..")
+
+	_mkdir("b")
+	_cd("b")
+	_mkfile("C")
+	_mkfile("D")
+	_cd("..")
+
+	_mkdir("c")
+	_cd("c")
+	_mkfile("E")
+	_cd("..")
+
+	var output_buffer bytes.Buffer
+	var args []string
+	args = append(args, "a", "b", "c")
+	//args = append(args, "b")
+	//args = append(args, "c")
+
+	ls(&output_buffer, args)
+
+	expected := "A\tB\tC\tD\tE\t"
+
+	if output_buffer.String() != expected {
+		t.Logf("expected \"%s\", but got \"%s\"\n",
+			expected,
+			output_buffer.String())
+		t.Fail()
+	}
+}
+
+func TestWithArgsDotFiles(t *testing.T) {
+	_cd(test_root)
+
+	dir := "WithArgsFiles"
+
+	_mkdir(dir)
+	_cd(dir)
+	_mkfile(".a")
+	_mkfile(".b")
+	_mkfile(".c")
+
+	var output_buffer bytes.Buffer
+	var args []string
+	args = append(args, "-a")
+	ls(&output_buffer, args)
+
+	expected := ".a\t.b\t.c\t"
+
+	if output_buffer.String() != expected {
+		t.Logf("expected \"%s\", but got \"%s\"\n",
+			expected,
+			output_buffer.String())
+		t.Fail()
+	}
+}
+
+
