@@ -17,14 +17,6 @@ func isDotName(file os.FileInfo) bool {
 func ls(output_buffer *bytes.Buffer, args []string) {
 	var dirs []string
 
-	//fmt.Printf("%s\n", args)
-	//fmt.Printf("%d\n", len(args))
-	if len(args) == 0 || len(args) == 1{
-		// the case executed with no args
-		dir, _ := os.Getwd()
-		dirs = append(dirs, dir)
-	}
-
 	args_options := make([]string, 0)
 
 	for _, a := range args {
@@ -43,11 +35,19 @@ func ls(output_buffer *bytes.Buffer, args []string) {
 		}
 	}
 
+	// parse argument
 	option_all := false
 	for _, o := range args_options {
 		if strings.Contains(o, "a") {
 			option_all = true
 		}
+	}
+
+	// if no files/directories are specified, list the current directory
+	if len(dirs) == 0 {
+		// the case executed with no args
+		dir, _ := os.Getwd()
+		dirs = append(dirs, dir)
 	}
 
 	//fmt.Printf("%s\n", option_all)
