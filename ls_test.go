@@ -190,7 +190,7 @@ func TestWithArgsDotFiles(t *testing.T) {
 	args = append(args, "-a")
 	ls(&output_buffer, args)
 
-	expected := ".a\t.b\t.c\t"
+	expected := ".\t..\t.a\t.b\t.c\t"
 
 	if output_buffer.String() != expected {
 		t.Logf("expected \"%s\", but got \"%s\"\n",

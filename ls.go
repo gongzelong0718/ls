@@ -43,6 +43,11 @@ func ls(output_buffer *bytes.Buffer, args []string) {
 		}
 	}
 
+	// if option_all and nothing else, add '.' and '..'
+	if option_all && len(dirs) == 0 {
+		output_buffer.WriteString(".\t..\t")
+	}
+
 	// if no files/directories are specified, list the current directory
 	if len(dirs) == 0 {
 		// the case executed with no args
