@@ -200,4 +200,31 @@ func TestWithArgsDotFiles(t *testing.T) {
 	}
 }
 
+func TestParentDirectory(t *testing.T) {
+	_cd(test_root)
+
+	dir := "CurrentDirectory"
+
+	_mkdir(dir)
+	_cd(dir)
+	_mkdir("a")
+	_mkdir("b")
+	_mkdir("c")
+	_cd("a")
+
+	var output_buffer bytes.Buffer
+	var args []string
+	args = append(args, "..")
+	ls(&output_buffer, args)
+
+	expected := "a\tb\tc\t"
+
+	if output_buffer.String() != expected {
+		t.Logf("expected \"%s\", but got \"%s\"\n",
+			expected,
+			output_buffer.String())
+		t.Fail()
+	}
+}
+
 
